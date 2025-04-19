@@ -1,14 +1,15 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { FormEvent } from "react";
+import { useActivities } from "../../../lib/hooks/useActivities";
 type Props = {
   activity?: Activity;
   handleFormClose: () => void;
-  handleSubmitForm: (activity: Activity) => void;
 };
 
-export default function ActivityForm({ activity, handleFormClose, handleSubmitForm }: Props) {
+export default function ActivityForm({ activity, handleFormClose }: Props) {
+  const { updateActivity, createActivity } = useActivities();
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -16,12 +17,18 @@ export default function ActivityForm({ activity, handleFormClose, handleSubmitFo
     formData.forEach((value, key) => {
       data[key] = value;
     });
-    if (activity) data.id = activity.id;
-    handleSubmitForm(data as unknown as Activity);
+    if (activity) {
+      data.id = activity.id;
+      await updateActivity.mutateAsync(data as unknown as Activity);
+      handleFormClose();
+    } else {
+      await createActivity.mutateAsync(data as unknown as Activity);
+      handleFormClose();
+    }
   }
 
   return (
-    <Paper sx={{ borderRadius: 3, p: 3, mt: 1 }}>
+    <Paper sx={{ borderRadius: 3, p: 3, mt: 1, position: "sticky", top: 89, boxShadow: 3 }}>
       <Typography variant="h5" gutterBottom color="text.primary">
         {activity ? "Edit" : "Create"} Activity
       </Typography>
@@ -60,9 +67,9 @@ export default function ActivityForm({ activity, handleFormClose, handleSubmitFo
           name="date"
           fullWidth
           margin="normal"
-          type="datetime-local"
+          type="date"
           sx={{ backgroundColor: "background.paper" }}
-          defaultValue={activity?.date}
+          defaultValue={activity?.date ? new Date(activity.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
         />
         <TextField
           label="City"
@@ -84,7 +91,7 @@ export default function ActivityForm({ activity, handleFormClose, handleSubmitFo
         />
         <Box display="flex" justifyContent="end" gap={2}>
           <Button color="inherit" onClick={handleFormClose}>Cancel</Button>
-          <Button variant="contained" color="success" type="submit">
+          <Button variant="contained" color="success" type="submit" disabled={updateActivity.isPending || createActivity.isPending}>
             {activity ? "Update" : "Create"}
           </Button>
         </Box>

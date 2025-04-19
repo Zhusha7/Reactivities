@@ -1,9 +1,9 @@
-import { Container, CssBaseline, ThemeProvider } from "@mui/material";
+import { Container, CssBaseline, ThemeProvider, Typography } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import NavBar from "./NavBar";
+import { useActivities } from "../../lib/hooks/useActivities";
 
 const theme = createTheme({
   palette: {
@@ -58,18 +58,12 @@ const theme = createTheme({
 });
 
 function App() {
-  const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
-
-  useEffect(() => {
-    axios
-      .get<Activity[]>("https://localhost:5001/api/activities")
-      .then((response) => setActivities(response.data));
-  }, []);
+  const { data: activities, isPending } = useActivities();
 
   const handleSelectActivity = (id: string) => {
-    setSelectedActivity(activities.find((x) => x.id === id));
+    setSelectedActivity(activities?.find((x: Activity) => x.id === id));
   };
 
   const handleCancelSelectActivity = () => {
@@ -89,35 +83,26 @@ function App() {
     setEditMode(false);
   };
 
-  const handleSubmitForm = (activity: Activity) => {
-    if (activity.id) {
-      setActivities(activities.map((x) => x.id === activity.id ? activity : x));
-    } else {
-      setActivities([...activities, {...activity, id: activities.length.toString()}]);
-    }
-    setEditMode(false);
-  }
 
-  const handleDeleteActivity = (id: string) => {
-    setActivities(activities.filter((x) => x.id !== id));
-  }
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <NavBar handleFormOpen={handleFormOpen} />
       <Container maxWidth="lg" sx={{ mt: 10 }}>
-        <ActivityDashboard
-          activities={activities}
-          selectedActivity={selectedActivity}
-          handleSelectActivity={handleSelectActivity}
-          handleCancelSelectActivity={handleCancelSelectActivity}
-          editMode={editMode}
-          handleFormClose={handleFormClose}
-          handleFormOpen={handleFormOpen}
-          handleSubmitForm={handleSubmitForm}
-          handleDeleteActivity={handleDeleteActivity}
-        />
+        {isPending || !activities ? (
+          <Typography variant="h2">Loading...</Typography>
+        ) : (
+          <ActivityDashboard
+            activities={activities}
+            selectedActivity={selectedActivity}
+            handleSelectActivity={handleSelectActivity}
+            handleCancelSelectActivity={handleCancelSelectActivity}
+            editMode={editMode}
+            handleFormClose={handleFormClose}
+            handleFormOpen={handleFormOpen}
+          />
+        )}
       </Container>
     </ThemeProvider>
   );
