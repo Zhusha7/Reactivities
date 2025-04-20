@@ -2,18 +2,15 @@ import { Group } from "@mui/icons-material";
 import {
   AppBar,
   Box,
-  Button,
   Container,
   MenuItem,
   Toolbar,
-  Typography,
+  Typography
 } from "@mui/material";
+import { NavLink } from "react-router";
+import MenuItemLink from "../shared/components/MenuItemLink";
 
-type Props = {
-  handleFormOpen: () => void;
-};
-
-export default function NavBar({ handleFormOpen }: Props) {
+export default function NavBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -31,48 +28,31 @@ export default function NavBar({ handleFormOpen }: Props) {
             }}
           >
             <Box>
-              <MenuItem sx={{ display: "flex", gap: 2 }}>
+              <MenuItem sx={{ display: "flex", gap: 2 }}  component={NavLink} to="/">
                 <Group />
-                <Typography variant="h5" fontWeight="bold">
+                <Typography sx={{textDecoration: "none"}} variant="h5" fontWeight="bold" color="text.primary">
                   Reactivities
                 </Typography>
               </MenuItem>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
-              <MenuItem
-                sx={{
-                  fontSize: "1.2rem",
-                  textTransform: "uppercase",
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
+              <MenuItemLink
+                to="/activities"
               >
                 Activities
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  fontSize: "1.2rem",
-                  textTransform: "uppercase",
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
+              </MenuItemLink>
+              <MenuItemLink
+                to="/createActivity"
               >
-                About
-              </MenuItem>
-              <MenuItem
-                sx={{
-                  fontSize: "1.2rem",
-                  textTransform: "uppercase",
-                  fontWeight: "bold",
-                  color: "text.primary",
-                }}
-              >
-                Contact
-              </MenuItem>
+                create activity
+              </MenuItemLink>
             </Box>
-            <Button size="small" variant="contained" color="secondary" onClick={() => handleFormOpen()}>
-              Create Activity
-            </Button>
+
+            <MenuItemLink
+                to="/"
+              >
+                User Menu
+              </MenuItemLink>
           </Toolbar>
         </Container>
       </AppBar>

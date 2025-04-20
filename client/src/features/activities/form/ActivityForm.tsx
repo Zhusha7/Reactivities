@@ -1,13 +1,13 @@
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { FormEvent } from "react";
 import { useActivities } from "../../../lib/hooks/useActivities";
-type Props = {
-  activity?: Activity;
-  handleFormClose: () => void;
-};
+import { useNavigate, useParams } from "react-router";
 
-export default function ActivityForm({ activity, handleFormClose }: Props) {
-  const { updateActivity, createActivity } = useActivities();
+export default function ActivityForm() {
+  const {id} = useParams();
+  const { updateActivity, createActivity, activity, isActivityLoading } = useActivities(id);
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -20,12 +20,17 @@ export default function ActivityForm({ activity, handleFormClose }: Props) {
     if (activity) {
       data.id = activity.id;
       await updateActivity.mutateAsync(data as unknown as Activity);
-      handleFormClose();
+      navigate(`/activities/${activity.id}`);
     } else {
-      await createActivity.mutateAsync(data as unknown as Activity);
-      handleFormClose();
+      createActivity.mutate(data as unknown as Activity, {
+        onSuccess: async (id) => {
+          navigate(`/activities/${id}`);
+        }
+      });
     }
   }
+
+  if (isActivityLoading) return <Typography variant="h5">Loading...</Typography>;
 
   return (
     <Paper sx={{ borderRadius: 3, p: 3, mt: 1, position: "sticky", top: 89, boxShadow: 3 }}>
@@ -90,7 +95,7 @@ export default function ActivityForm({ activity, handleFormClose }: Props) {
           defaultValue={activity?.venue}
         />
         <Box display="flex" justifyContent="end" gap={2}>
-          <Button color="inherit" onClick={handleFormClose}>Cancel</Button>
+          <Button color="inherit">Cancel</Button>
           <Button variant="contained" color="success" type="submit" disabled={updateActivity.isPending || createActivity.isPending}>
             {activity ? "Update" : "Create"}
           </Button>

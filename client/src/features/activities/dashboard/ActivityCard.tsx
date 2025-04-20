@@ -8,16 +8,16 @@ import {
   Typography,
 } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
+import { useNavigate } from "react-router";
 type Props = {
   activity: Activity;
-  handleSelectActivity: (id: string) => void;
 };
 
 export default function ActivityCard({
   activity,
-  handleSelectActivity,
 }: Props) {
   const {deleteActivity} = useActivities();
+  const navigate = useNavigate();
   return (
     <Card sx={{ borderRadius: 3, boxShadow: 3, p: 1, m: 1 }}>
       <CardContent>
@@ -41,10 +41,10 @@ export default function ActivityCard({
         <Chip label={activity.category} variant="outlined" />
         <Box sx={{ display: "flex", gap: 1 }}>
           <Button
+            onClick={() => navigate(`/activities/${activity.id}`)}
             variant="contained"
             color="primary"
             size="small"
-            onClick={() => handleSelectActivity(activity.id)}
           >
             View
           </Button>

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 
-export const useActivities = () => {
+export const useActivities = (id?: string) => {
   const queryClient = useQueryClient();
   const { data, isPending } = useQuery({
     queryKey: ["activities"],
@@ -11,21 +11,32 @@ export const useActivities = () => {
     },
   });
 
+ const {data: activity, isLoading: isActivityLoading} = useQuery({
+  queryKey: ["activity", id],
+  queryFn: async () => {
+    const response = await agent.get<Activity>(`/activities/${id}`);
+    return response.data;
+  },
+  enabled: !!id,
+ });
+
+
   const updateActivity = useMutation({
     mutationFn: async (activity: Activity) => {
       await agent.put<Activity>("/activities", activity);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activities"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["activities"] });
     },
   });
 
   const createActivity = useMutation({
     mutationFn: async (activity: Activity) => {
-      await agent.post<Activity>("/activities", activity);
+      const response = await agent.post<Activity>("/activities", activity);
+      return response.data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activities"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["activities"] });
     },
   });
 
@@ -33,9 +44,9 @@ export const useActivities = () => {
     mutationFn: async (id: string) => {
       await agent.delete<Activity>(`/activities/${id}`);
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["activities"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["activities"] });
     },
   });
-  return { data, isPending, updateActivity, createActivity, deleteActivity };
+  return { data, isPending, updateActivity, createActivity, deleteActivity, activity, isActivityLoading };
 };

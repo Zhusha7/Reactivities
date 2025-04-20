@@ -1,9 +1,7 @@
-import { Container, CssBaseline, ThemeProvider, Typography } from "@mui/material";
+import { Container, CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useState } from "react";
-import ActivityDashboard from "../../features/activities/dashboard/ActivityDashboard";
 import NavBar from "./NavBar";
-import { useActivities } from "../../lib/hooks/useActivities";
+import { Outlet } from "react-router";
 
 const theme = createTheme({
   palette: {
@@ -58,51 +56,13 @@ const theme = createTheme({
 });
 
 function App() {
-  const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
-  const [editMode, setEditMode] = useState(false);
-  const { data: activities, isPending } = useActivities();
-
-  const handleSelectActivity = (id: string) => {
-    setSelectedActivity(activities?.find((x: Activity) => x.id === id));
-  };
-
-  const handleCancelSelectActivity = () => {
-    setSelectedActivity(undefined);
-  };
-
-  const handleFormOpen = (id?: string) => {
-    if (id) {
-      handleSelectActivity(id);
-    } else {
-      handleCancelSelectActivity();
-    }
-    setEditMode(true);
-  };
-
-  const handleFormClose = () => {
-    setEditMode(false);
-  };
-
-
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar handleFormOpen={handleFormOpen} />
+      <NavBar />
       <Container maxWidth="lg" sx={{ mt: 10 }}>
-        {isPending || !activities ? (
-          <Typography variant="h2">Loading...</Typography>
-        ) : (
-          <ActivityDashboard
-            activities={activities}
-            selectedActivity={selectedActivity}
-            handleSelectActivity={handleSelectActivity}
-            handleCancelSelectActivity={handleCancelSelectActivity}
-            editMode={editMode}
-            handleFormClose={handleFormClose}
-            handleFormOpen={handleFormOpen}
-          />
-        )}
+        <Outlet />
       </Container>
     </ThemeProvider>
   );
