@@ -1,7 +1,8 @@
 import { Container, CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import { Outlet, useLocation } from "react-router";
+import HomePage from "../../features/home/HomePage";
 import NavBar from "./NavBar";
-import { Outlet } from "react-router";
 
 const theme = createTheme({
   palette: {
@@ -51,19 +52,26 @@ const theme = createTheme({
       hover: "rgba(108, 112, 134, 0.1)", // Catppuccin Mocha - Text (transparent)
       selected: "rgba(205, 214, 244, 0.3)", // Catppuccin Mocha - Text (transparent)
       disabled: "rgba(108, 112, 134, 0.3)", // Catppuccin Mocha - Surface2 (transparent)
-    }
+    },
   },
 });
 
 function App() {
+  const location = useLocation();
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <NavBar />
-      <Container maxWidth="lg" sx={{ mt: 10 }}>
-        <Outlet />
-      </Container>
+      {location.pathname === "/" ? (
+        <HomePage />
+      ) : (
+        <>
+          <NavBar />
+          <Container maxWidth="lg" sx={{ mt: 10 }}>
+            <Outlet />
+          </Container>
+        </>
+      )}
     </ThemeProvider>
   );
 }

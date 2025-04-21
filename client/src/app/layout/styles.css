@@ -1,0 +1,64 @@
+/* React Calendar Catppuccin Mocha Theme */
+.react-calendar {
+    background-color: #313244 !important; /* Surface0 */
+    border: none !important;
+    border-radius: 8px;
+    color: #cdd6f4 !important; /* Text */
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 8px;
+}
+
+.react-calendar__navigation button {
+    color: #cdd6f4 !important; /* Text */
+    min-width: 44px;
+    background: none;
+    font-size: 16px;
+    margin-top: 8px;
+}
+
+.react-calendar__navigation button:enabled:hover,
+.react-calendar__navigation button:enabled:focus {
+    background-color: #45475a !important; /* Surface1 */
+    border-radius: 8px;
+}
+
+.react-calendar__navigation button[disabled] {
+    background-color: #313244 !important; /* Surface0 */
+    color: #6c7086 !important; /* Surface2 */
+}
+
+.react-calendar__month-view__weekdays {
+    color: #89b4fa !important; /* Blue */
+    font-weight: bold;
+}
+
+.react-calendar__tile {
+    color: #cdd6f4 !important; /* Text */
+    border-radius: 8px;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+    background-color: #45475a !important; /* Surface1 */
+}
+
+.react-calendar__tile--now {
+    background-color: #45475a !important; /* Surface1 */
+    color: #cba6f7 !important; /* Mauve */
+}
+
+.react-calendar__tile--active {
+    background-color: #89b4fa !important; /* Blue */
+    color: #1e1e2e !important; /* Base */
+}
+
+.react-calendar__tile--active:enabled:hover,
+.react-calendar__tile--active:enabled:focus {
+    background-color: #b4befe !important; /* Lavender */
+}
+
+.react-calendar__tile:disabled {
+    background-color: #313244 !important; /* Surface0 */
+    color: #6c7086 !important; /* Surface2 */
+}
