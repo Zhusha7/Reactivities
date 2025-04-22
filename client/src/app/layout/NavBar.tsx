@@ -3,14 +3,19 @@ import {
   AppBar,
   Box,
   Container,
+  LinearProgress,
   MenuItem,
   Toolbar,
-  Typography
+  Typography,
 } from "@mui/material";
+import { Observer } from "mobx-react-lite";
 import { NavLink } from "react-router";
+import { useStore } from "../../lib/hooks/useStore";
 import MenuItemLink from "../shared/components/MenuItemLink";
 
 export default function NavBar() {
+  const { uiStore } = useStore();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -28,33 +33,47 @@ export default function NavBar() {
             }}
           >
             <Box>
-              <MenuItem sx={{ display: "flex", gap: 2 }}  component={NavLink} to="/">
+              <MenuItem
+                sx={{ display: "flex", gap: 2 }}
+                component={NavLink}
+                to="/"
+              >
                 <Group />
-                <Typography sx={{textDecoration: "none"}} variant="h5" fontWeight="bold" color="text.primary">
+                <Typography
+                  sx={{ textDecoration: "none" }}
+                  variant="h5"
+                  fontWeight="bold"
+                  color="text.primary"
+                >
                   Reactivities
                 </Typography>
               </MenuItem>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
-              <MenuItemLink
-                to="/activities"
-              >
-                Activities
-              </MenuItemLink>
-              <MenuItemLink
-                to="/createActivity"
-              >
-                create activity
-              </MenuItemLink>
+              <MenuItemLink to="/activities">Activities</MenuItemLink>
+              <MenuItemLink to="/createActivity">Create Activity</MenuItemLink>
+              <MenuItemLink to="/counter">Counter</MenuItemLink>
             </Box>
-
-            <MenuItemLink
-                to="/"
-              >
-                User Menu
-              </MenuItemLink>
+            <MenuItemLink to="/">User Menu</MenuItemLink>
           </Toolbar>
         </Container>
+
+        <Observer>
+          {() =>
+            uiStore.isLoading ? (
+              <LinearProgress
+                color="secondary"
+                sx={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: 2,
+                }}
+              />
+            ) : null
+          }
+        </Observer>
       </AppBar>
     </Box>
   );

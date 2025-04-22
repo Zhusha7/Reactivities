@@ -1,3 +1,5 @@
+![wakatime](https://wakatime.com/badge/user/7a5fa2dc-4027-47a3-8e34-98d867f91ffd/project/1d27b410-f774-40cf-bf62-0748414f91fc.svg?style=for-the-badge)
+
 # Reactivities
 
 This repository contains the source code for the Udemy course **"Complete Guide to Building an App with .NET Core and React"**. You can find the course here:
@@ -16,7 +18,6 @@ Before you begin, ensure you have the following installed on your machine:
 
 -   [.NET Core SDK (6.0 or later)](https://dotnet.microsoft.com/download)
 -   [Node.js (14 or later)](https://nodejs.org/)
--   [Yarn](https://yarnpkg.com/) (optional, can also use npm)
 
 ## Getting Started
 
@@ -29,8 +30,9 @@ Before you begin, ensure you have the following installed on your machine:
 
 2. **Run the API**
 
+    In ./API:
+
     ```bash
-    cd API
     dotnet run
     ```
 
@@ -38,10 +40,11 @@ Before you begin, ensure you have the following installed on your machine:
 
 3. **Run the React client**
 
+    In ./client:
+
     ```bash
-    cd ../client
-    yarn install    # or npm install
-    yarn start      # or npm start
+    npm install
+    npm run dev
     ```
 
     Open your browser and navigate to `http://localhost:3000`.
