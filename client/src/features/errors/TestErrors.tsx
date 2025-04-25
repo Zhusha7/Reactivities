@@ -1,0 +1,81 @@
+import {
+  Alert,
+  AlertTitle,
+  Button,
+  ButtonGroup,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { router } from "../../app/router/Routes.tsx";
+import agent from "../../lib/api/agent.ts";
+
+export default function TestErrors() {
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  const { mutate } = useMutation({
+    mutationFn: async ({
+      path,
+      method = "get",
+    }: {
+      path: string;
+      method: string;
+    }) => {
+      if (method === "post") await agent.post(path, {});
+      else await agent.get(path);
+    },
+    onError: (err) => {
+      if (Array.isArray(err)) {
+        setValidationErrors(err);
+      } else {
+        setValidationErrors([]);
+      }
+    },
+  });
+
+  const handleError = (path: string, method = "get") => {
+    mutate({ path, method });
+  };
+
+  return (
+    <>
+      <Typography variant="h4">Test errors component</Typography>
+
+      <ButtonGroup variant="contained" sx={{ mt: 4 }}>
+        <Button onClick={() => handleError("buggy/not-found")}>
+          Not found
+        </Button>
+        <Button onClick={() => handleError("buggy/bad-request")}>
+          Bad request
+        </Button>
+        <Button onClick={() => handleError("activities", "post")}>
+          Validation error
+        </Button>
+        <Button onClick={() => handleError("buggy/server-error")}>
+          Server error
+        </Button>
+        <Button onClick={() => handleError("buggy/unauthorized")}>
+          Unauthorised
+        </Button>
+        <Button onClick={() => router.navigate("/incorrect-path")}>
+          Bad navigation
+        </Button>
+      </ButtonGroup>
+      {validationErrors.length > 0 && (
+        <Alert severity="error">
+          <AlertTitle>Validation Errors</AlertTitle>
+          <List>
+            {validationErrors.map((error, i) => (
+              <ListItem key={i}>
+                <ListItemText primary={error} />
+              </ListItem>
+            ))}
+          </List>
+        </Alert>
+      )}
+    </>
+  );
+}

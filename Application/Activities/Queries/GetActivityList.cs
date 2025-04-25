@@ -1,9 +1,7 @@
-using System;
 using MediatR;
 using Domain;
 using Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Activities.Queries;
 
