@@ -10,11 +10,14 @@ import {
 } from "@mui/material";
 import { Observer } from "mobx-react-lite";
 import { NavLink } from "react-router";
+import { useAccount } from "../../lib/hooks/useAccount";
 import { useStore } from "../../lib/hooks/useStore";
 import MenuItemLink from "../shared/components/MenuItemLink";
+import UserMenu from "./UserMenu";
 
 export default function NavBar() {
   const { uiStore } = useStore();
+  const { currentUser } = useAccount();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -51,11 +54,19 @@ export default function NavBar() {
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
               <MenuItemLink to="/activities">Activities</MenuItemLink>
-              <MenuItemLink to="/createActivity">Create Activity</MenuItemLink>
               <MenuItemLink to="/counter">Counter</MenuItemLink>
               <MenuItemLink to="/errors">Errors</MenuItemLink>
             </Box>
-            <MenuItemLink to="/">User Menu</MenuItemLink>
+            <Box display="flex" alignItems="center">
+              {currentUser ? (
+                <UserMenu />
+              ) : (
+                <>
+                  <MenuItemLink to="/login">Login</MenuItemLink>
+                  <MenuItemLink to="/register">Register</MenuItemLink>
+                </>
+              )}
+            </Box>
           </Toolbar>
         </Container>
 

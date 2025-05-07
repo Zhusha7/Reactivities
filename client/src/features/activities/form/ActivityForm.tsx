@@ -13,7 +13,6 @@ import {
   activitySchema,
 } from "../../../lib/schemas/activitySchema";
 import { categoryOptions } from "./categoryOptions";
-import { Activity } from "../../../lib";
 
 export default function ActivityForm() {
   const { control, reset, handleSubmit } = useForm<ActivitySchema>({

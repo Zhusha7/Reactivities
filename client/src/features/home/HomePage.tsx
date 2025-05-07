@@ -12,7 +12,7 @@ export default function HomePage() {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        textAlign: 'center'
+        textAlign: "center",
       }}
     >
       <Typography
@@ -20,7 +20,7 @@ export default function HomePage() {
         sx={{
           fontWeight: "bold",
           color: "primary.main",
-          mb: 4
+          mb: 4,
         }}
       >
         Welcome to Reactivities
@@ -30,7 +30,7 @@ export default function HomePage() {
         variant="h5"
         sx={{
           mb: 6,
-          color: "text.secondary"
+          color: "text.secondary",
         }}
       >
         Discover and join amazing activities in your area
@@ -42,8 +42,8 @@ export default function HomePage() {
           "@keyframes pulse": {
             "0%": { transform: "scale(1)" },
             "50%": { transform: "scale(1.05)" },
-            "100%": { transform: "scale(1)" }
-          }
+            "100%": { transform: "scale(1)" },
+          },
         }}
       >
         <Button
@@ -56,13 +56,13 @@ export default function HomePage() {
             px: 6,
             fontSize: "1.2rem",
             borderRadius: 3,
-            boxShadow: 6
+            boxShadow: 6,
           }}
-          onClick={() => navigate('/activities')}
+          onClick={() => navigate("/activities")}
         >
           Explore Activities
         </Button>
       </Box>
     </Container>
-  )
+  );
 }
