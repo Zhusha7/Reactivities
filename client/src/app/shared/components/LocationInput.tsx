@@ -14,7 +14,6 @@ import {
   useController,
   UseControllerProps,
 } from "react-hook-form";
-import { LocationIqSuggestion } from "../../../lib";
 
 type Props<T extends FieldValues> = {
   label: string;

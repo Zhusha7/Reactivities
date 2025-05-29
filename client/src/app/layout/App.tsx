@@ -1,6 +1,6 @@
 import { Container, CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { Outlet, useLocation } from "react-router";
+import {Outlet, ScrollRestoration, useLocation} from "react-router";
 import HomePage from "../../features/home/HomePage";
 import NavBar from "./NavBar";
 
@@ -61,6 +61,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <ScrollRestoration />
       <CssBaseline />
       {location.pathname === "/" ? (
         <HomePage />

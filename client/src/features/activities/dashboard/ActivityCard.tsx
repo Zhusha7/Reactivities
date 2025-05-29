@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router";
 import { formatDate } from "../../../lib/util/util";
+import AvatarPopover from "../../../app/shared/components/AvatarPopover.tsx";
 
 type Props = {
   activity: Activity;
@@ -19,35 +20,35 @@ type Props = {
 
 export default function ActivityCard({ activity }: Props) {
   const navigate = useNavigate();
-  const isHost = false;
-  const isGoing = false;
-  const isCanceled = false;
-  const label = isHost
+  const label = activity.isHost
     ? "You are hosting this activity"
     : "You are attending this activity";
-  const color = isHost ? "secondary" : isGoing ? "warning" : "default";
+  const color = activity.isHost
+    ? "secondary"
+    : activity.isGoing
+    ? "warning"
+    : "default";
 
   return (
     <Card elevation={3} sx={{ borderRadius: 3, p: 1, m: 1 }}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <CardHeader
           avatar={<Avatar sx={{ height: 80, width: 80 }} />}
-          title={activity.title}
-          titleTypographyProps={{
-            fontWeight: "bold",
-            fontSize: 20,
-          }}
+          title={<Typography variant="h6">{activity.title}</Typography>}
           subheader={
             <>
-              Hosted by <Link to={`/profiles/bob`}>Bob</Link>
+              Hosted by{" "}
+              <Link to={`/profiles/${activity.hostId}`}>
+                {activity.hostDisplayName}
+              </Link>
             </>
           }
         />
         <Box display="flex" flexDirection="column" gap={2} mr={2}>
-          {(isHost || isGoing) && (
+          {(activity.isHost || activity.isGoing) && (
             <Chip label={label} color={color} sx={{ borderRadius: 2 }} />
           )}
-          {isCanceled && (
+          {activity.isCancelled && (
             <Chip label="Canceled" color="error" sx={{ borderRadius: 2 }} />
           )}
         </Box>
@@ -70,7 +71,20 @@ export default function ActivityCard({ activity }: Props) {
           <Divider />
         </Box>
         <Box alignItems="center" py={3} pl={3} bgcolor="background.paper">
-          <Typography variant="body2">Attendees go here</Typography>
+          {activity.attendees.length > 0 ? (
+            <Box display="flex" gap={1}>
+              {activity.attendees.map((attendee) => (
+                <AvatarPopover
+                  key={attendee.id}
+                  profile={attendee}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Typography variant="body2" color="textSecondary">
+              No attendees yet
+            </Typography>
+          )}
         </Box>
       </CardContent>
       <CardContent sx={{ display: "flex", justifyContent: "space-between" }}>

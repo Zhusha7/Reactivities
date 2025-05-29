@@ -1,17 +1,14 @@
-import { Badge, Box, Button, Card, CardMedia, Typography } from "@mui/material";
+import { Box, Button, Card, CardMedia, Chip, Typography } from "@mui/material";
 import { Link } from "react-router";
 import { formatDate } from "../../../lib/util/util";
-import { Activity } from "../../../lib";
+import {useActivities} from "../../../lib/hooks/useActivities.ts";
 
 type Props = {
   activity: Activity;
 };
 
 export default function ActivityDetailsHeader({ activity }: Props) {
-  const isCancelled = false;
-  const isHost = true;
-  const isGoing = true;
-  const loading = false;
+  const {updateAttendance} = useActivities(activity.id);
 
   return (
     <Card
@@ -22,11 +19,11 @@ export default function ActivityDetailsHeader({ activity }: Props) {
         overflow: "hidden",
       }}
     >
-      {isCancelled && (
-        <Badge
-          sx={{ position: "absolute", left: 40, top: 20, zIndex: 1000 }}
+      {activity.isCancelled && (
+        <Chip
+          sx={{ position: "absolute", left: 40, top: 20, zIndex: 1000, borderRadius: 1 }}
           color="error"
-          badgeContent="Cancelled"
+          label="Cancelled"
         />
       )}
       <CardMedia
@@ -51,7 +48,6 @@ export default function ActivityDetailsHeader({ activity }: Props) {
           boxSizing: "border-box",
         }}
       >
-        {/* Text Section */}
         <Box>
           <Typography variant="h4" sx={{ fontWeight: "bold" }}>
             {activity.title}
@@ -62,31 +58,31 @@ export default function ActivityDetailsHeader({ activity }: Props) {
           <Typography variant="subtitle2">
             Hosted by{" "}
             <Link
-              to={`/profiles/username`}
+              to={`/profiles/${activity.hostId}`}
               style={{ color: "white", fontWeight: "bold" }}
             >
-              Bob
+                {activity.hostDisplayName}
             </Link>
           </Typography>
         </Box>
 
-        {/* Buttons aligned to the right */}
         <Box sx={{ display: "flex", gap: 2 }}>
-          {isHost ? (
+          {activity.isHost ? (
             <>
               <Button
                 variant="contained"
-                color={isCancelled ? "success" : "error"}
-                onClick={() => {}}
+                color={activity.isCancelled ? "success" : "error"}
+                onClick={() => updateAttendance.mutate(activity.id)}
+                disabled={updateAttendance.isPending}
               >
-                {isCancelled ? "Re-activate Activity" : "Cancel Activity"}
+                {activity.isCancelled ? "Re-activate Activity" : "Cancel Activity"}
               </Button>
               <Button
                 variant="contained"
                 color="primary"
                 component={Link}
                 to={`/manage/${activity.id}`}
-                disabled={isCancelled}
+                disabled={activity.isCancelled}
               >
                 Manage Event
               </Button>
@@ -94,11 +90,11 @@ export default function ActivityDetailsHeader({ activity }: Props) {
           ) : (
             <Button
               variant="contained"
-              color={isGoing ? "primary" : "info"}
-              onClick={() => {}}
-              disabled={isCancelled || loading}
+              color={activity.isGoing ? "primary" : "info"}
+              onClick={() => updateAttendance.mutate(activity.id)}
+              disabled={updateAttendance.isPending || activity.isCancelled}
             >
-              {isGoing ? "Cancel Attendance" : "Join Activity"}
+              {activity.isGoing ? "Cancel Attendance" : "Join Activity"}
             </Button>
           )}
         </Box>

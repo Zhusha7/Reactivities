@@ -14,14 +14,22 @@ export default function ActivityDetailsChat() {
       <Box
         sx={{
           textAlign: "center",
-          bgcolor: "primary.main",
+          backgroundColor: "primary.main",
           color: "white",
           padding: 2,
+          borderTopLeftRadius: 4,
+          borderTopRightRadius: 4,
         }}
       >
         <Typography variant="h6">Chat about this event</Typography>
       </Box>
-      <Card>
+      <Card
+        sx={{
+          borderRadius: 0,
+          borderBottomLeftRadius: 4,
+          borderBottomRightRadius: 4,
+        }}
+      >
         <CardContent>
           <div>
             <form>
@@ -46,6 +54,7 @@ export default function ActivityDetailsChat() {
                 <Box display="flex" alignItems="center" gap={3}>
                   <Typography
                     component={Link}
+                    color="primary"
                     to={`/profiles/username`}
                     variant="subtitle1"
                     sx={{ fontWeight: "bold", textDecoration: "none" }}
