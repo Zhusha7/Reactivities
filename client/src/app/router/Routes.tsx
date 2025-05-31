@@ -11,6 +11,7 @@ import TestErrors from "../../features/errors/TestErrors";
 import HomePage from "../../features/home/HomePage";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
+import ProfilePage from "../../features/profiles/ProfilePage.tsx";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
           { path: "activities/:id", element: <ActivityDetailPage /> },
           { path: "createActivity", element: <ActivityForm key="create" /> },
           { path: "manage/:id", element: <ActivityForm /> },
+          { path: "profiles/:id", element: <ProfilePage /> },
         ],
       },
       { path: "", element: <HomePage /> },

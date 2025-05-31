@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 import { makeAutoObservable } from "mobx";
 
 export class UiStore {
@@ -12,10 +14,10 @@ export class UiStore {
     }
 
     isBusy() {
-        return (this.isLoading = true);
+        this.isLoading = true
     }
 
     isIdle() {
-        return (this.isLoading = false);
+        this.isLoading = false
     }
 }

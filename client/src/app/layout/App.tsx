@@ -46,7 +46,7 @@ const theme = createTheme({
       secondary: "#bac2de", // Catppuccin Mocha - Subtext1
       disabled: "#6c7086", // Catppuccin Mocha - Surface2
     },
-    divider: "#494d64", // Catppuccin Mocha - Overlay2
+    divider: "#53576e", // Catppuccin Mocha - Overlay2
     action: {
       active: "rgba(205, 214, 244, 0.3)", // Catppuccin Mocha - Text (transparent)
       hover: "rgba(108, 112, 134, 0.1)", // Catppuccin Mocha - Text (transparent)

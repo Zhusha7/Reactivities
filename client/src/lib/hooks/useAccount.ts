@@ -36,12 +36,22 @@ export const useAccount = () => {
         mutationFn: async () => {
             await agent.post("/account/logout");
         },
-        onSuccess: () => {
+        onMutate: async () => {
+            await queryClient.cancelQueries({ queryKey: ["user"] });
+            const prevUser = queryClient.getQueryData<User>(["user"]);
             queryClient.removeQueries({ queryKey: ["user"] });
             queryClient.removeQueries({ queryKey: ["activities"] });
             queryClient.removeQueries({ queryKey: ["activity"] });
             navigate("/");
+            return { prevUser };
         },
+        onError: (error, _, context) => {
+            console.log(error);
+            toast.error("Logout failed - please try again later.");
+            if (context?.prevUser) {
+                queryClient.setQueryData(["user"], context.prevUser);
+            }
+        }
     });
 
     const { data: currentUser, isLoading: loadingUserInfo } = useQuery({

@@ -1,17 +1,9 @@
-import { Group } from "@mui/icons-material";
-import {
-  AppBar,
-  Box,
-  Container,
-  LinearProgress,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from "@mui/material";
-import { Observer } from "mobx-react-lite";
-import { NavLink } from "react-router";
-import { useAccount } from "../../lib/hooks/useAccount";
-import { useStore } from "../../lib/hooks/useStore";
+import {Group} from "@mui/icons-material";
+import {AppBar, Box, Container, LinearProgress, MenuItem, Toolbar, Typography,} from "@mui/material";
+import {Observer} from "mobx-react-lite";
+import {NavLink} from "react-router";
+import {useAccount} from "../../lib/hooks/useAccount";
+import {useStore} from "../../lib/hooks/useStore";
 import MenuItemLink from "../shared/components/MenuItemLink";
 import UserMenu from "./UserMenu";
 

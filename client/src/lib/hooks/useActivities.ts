@@ -1,14 +1,14 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocation } from "react-router";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useLocation} from "react-router";
 import agent from "../api/agent";
-import { useAccount } from "./useAccount";
+import {useAccount} from "./useAccount";
 
 export const useActivities = (id?: string) => {
     const queryClient = useQueryClient();
-    const { currentUser } = useAccount();
+    const {currentUser} = useAccount();
     const location = useLocation();
 
-    const { data, isLoading } = useQuery({
+    const {data, isLoading} = useQuery({
         queryKey: ["activities"],
         queryFn: async () => {
             const response = await agent.get<Activity[]>("/activities");
@@ -16,17 +16,19 @@ export const useActivities = (id?: string) => {
         },
         enabled: !id && location.pathname === "/activities" && !!currentUser,
         select: (data) => {
-            return data.map((activity) => ({
-                ...activity,
-                isHost: activity.hostId === currentUser?.id,
-                isGoing: activity.attendees.some(
-                    (attendee) => attendee.id === currentUser?.id
-                ),
-            }));
+            return data.map((activity) => {
+                const host = activity.attendees.find(attendee => attendee.id === activity.hostId);
+                return {
+                    ...activity,
+                    isHost: activity.hostId === currentUser?.id,
+                    isGoing: activity.attendees.some(attendee => attendee.id === currentUser?.id),
+                    hostImageUrl: host?.imageUrl,
+                }
+            });
         },
     });
 
-    const { data: activity, isLoading: isActivityLoading } = useQuery({
+    const {data: activity, isLoading: isActivityLoading} = useQuery({
         queryKey: ["activity", id],
         queryFn: async () => {
             const response = await agent.get<Activity>(`/activities/${id}`);
@@ -34,12 +36,12 @@ export const useActivities = (id?: string) => {
         },
         enabled: !!id && !!currentUser,
         select: (data) => {
+            const host = data.attendees.find(attendee => attendee.id === data.hostId);
             return {
                 ...data,
                 isHost: data.hostId === currentUser?.id,
-                isGoing: data.attendees.some(
-                    (attendee) => attendee.id === currentUser?.id
-                ),
+                isGoing: data.attendees.some(attendee => attendee.id === currentUser?.id),
+                hostImageUrl: host?.imageUrl,
             };
         },
     });
@@ -49,7 +51,7 @@ export const useActivities = (id?: string) => {
             await agent.put<Activity>(`/activities/${activity.id}`, activity);
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["activities"] });
+            await queryClient.invalidateQueries({queryKey: ["activities"]});
         },
     });
 
@@ -62,7 +64,7 @@ export const useActivities = (id?: string) => {
             return response.data;
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["activities"] });
+            await queryClient.invalidateQueries({queryKey: ["activities"]});
         },
     });
 
@@ -71,7 +73,7 @@ export const useActivities = (id?: string) => {
             await agent.delete<Activity>(`/activities/${id}`);
         },
         onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ["activities"] });
+            await queryClient.invalidateQueries({queryKey: ["activities"]});
         },
     });
 
@@ -80,7 +82,7 @@ export const useActivities = (id?: string) => {
             await agent.post<Activity>(`/activities/${id}/attend`);
         },
         onMutate: async (activityId: string) => {
-            await queryClient.cancelQueries({ queryKey: ["activity", activityId] });
+            await queryClient.cancelQueries({queryKey: ["activity", activityId]});
 
             const prevActivity = queryClient.getQueryData<Activity>(["activity", activityId]);
 
@@ -99,13 +101,16 @@ export const useActivities = (id?: string) => {
                         ? isHost
                             ? oldActivity.attendees
                             : oldActivity.attendees.filter(attendee => attendee.id !== currentUser.id)
-                        : [...oldActivity.attendees, { id: currentUser.id, name: currentUser.displayName, image: currentUser.imageUrl }]
+                        : [...oldActivity.attendees, {
+                            id: currentUser.id,
+                            name: currentUser.displayName,
+                            image: currentUser.imageUrl
+                        }]
                 }
             })
             return {prevActivity};
         },
         onError: (error, activityId, context) => {
-            console.log("prev activity: " + context?.prevActivity);
             console.log(error);
             if (context?.prevActivity) {
                 queryClient.setQueryData(["activity", activityId], context.prevActivity);
