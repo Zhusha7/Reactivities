@@ -1,4 +1,4 @@
-﻿using Application.Activities.Profiles.DTOs;
+﻿using Application.Profiles.DTOs;
 using Application.Core;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;

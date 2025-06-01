@@ -1,6 +1,8 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import agent from "../api/agent.ts";
 import {useMemo} from "react";
+import {EditProfileSchema} from "../schemas/editProfileSchema.ts";
+import { toast } from "react-toastify";
 
 export const useProfile = (id?: string) => {
     const queryClient = useQueryClient();
@@ -107,6 +109,47 @@ export const useProfile = (id?: string) => {
         }
     })
 
+    const editProfile = useMutation({
+        mutationFn: async (profile: EditProfileSchema) => {
+            await agent.put(`/profiles/`, profile);
+        },
+        onMutate: async (profile: EditProfileSchema) => {
+            await queryClient.cancelQueries({queryKey: ['profile', id]});
+            await queryClient.cancelQueries({queryKey: ['user']});
+
+            const prevProfile = queryClient.getQueryData<Profile>(['profile', id]);
+            const prevUser = queryClient.getQueryData<User>(['user']);
+
+            queryClient.setQueryData(['profile', id], (oldProfile: Profile) => {
+                if (!oldProfile) return oldProfile;
+                return {
+                    ...oldProfile,
+                    ...profile
+                }
+            })
+            queryClient.setQueryData(['user'], (oldUser: User) => {
+                if (!oldUser) return oldUser;
+                return {
+                    ...oldUser,
+                    ...profile
+                }
+            })
+
+            return {
+                prevProfile,
+                prevUser
+            }
+        },
+        onError: (error, _profile, context) => {
+            console.log(error);
+            toast.error('Failed to update profile');
+            if (context?.prevProfile && context?.prevUser) {
+                queryClient.setQueryData(['profile', id], context.prevProfile);
+                queryClient.setQueryData(['user'], context.prevUser);
+            }
+        }
+    })
+
     const isCurrentUser = useMemo(() => {
         return id === queryClient.getQueryData<User>(['user'])?.id
     }, [id, queryClient])
@@ -119,6 +162,7 @@ export const useProfile = (id?: string) => {
         isCurrentUser,
         uploadPhoto,
         setMainPhoto,
-        deletePhoto
+        deletePhoto,
+        editProfile
     }
 }

@@ -1,4 +1,4 @@
-﻿using Application.Activities.Profiles.DTOs;
+﻿using Application.Profiles.DTOs;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Interfaces;

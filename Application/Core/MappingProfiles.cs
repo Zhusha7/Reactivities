@@ -2,7 +2,7 @@ using System;
 using AutoMapper;
 using Domain;
 using Application.Activities.DTO;
-using Application.Activities.Profiles.DTOs;
+using Application.Profiles.DTOs;
 namespace Application.Core;
 
 public class MappingProfiles : Profile

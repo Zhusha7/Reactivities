@@ -1,4 +1,4 @@
-﻿using Application.Activities.Profiles.DTOs;
+﻿using Application.Profiles.DTOs;
 using Application.Interfaces;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;

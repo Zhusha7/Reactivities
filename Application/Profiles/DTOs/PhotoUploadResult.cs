@@ -1,4 +1,4 @@
-﻿namespace Application.Activities.Profiles.DTOs;
+﻿namespace Application.Profiles.DTOs;
 
 public class PhotoUploadResult
 {
