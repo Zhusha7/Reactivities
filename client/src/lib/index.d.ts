@@ -29,6 +29,15 @@ type Photo = {
     url: string;
 }
 
+type ChatComment = {
+    id: string;
+    createdAt: Date;
+    body: string;
+    userId: string;
+    displayName: string;
+    imageUrl?: string;
+}
+
 type LocationIqSuggestion = {
     place_id: string;
     osm_id: string;
