@@ -21,7 +21,7 @@ export default function ProfileAbout() {
             {editMode ? (
                 <ProfileEditForm setEditMode={setEditMode}/>
             ) : (
-                <Box sx={{overflow: "auto", maxHeight: 350}}>
+                <Box sx={{overflow: "auto", maxHeight: 450}}>
                     <Typography variant="body1" sx={{whiteSpace: "pre-wrap"}}>
                         {profile?.bio || "No bio added"}
                     </Typography>

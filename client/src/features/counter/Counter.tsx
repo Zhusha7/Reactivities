@@ -27,7 +27,7 @@ const Counter = observer(function Counter() {
           {counterStore.title}
         </Typography>
         <Typography variant="h6" gutterBottom>
-          {counterStore.count}
+          {counterStore.eventsCount}
         </Typography>
         <ButtonGroup variant="contained" size="small" sx={{ mt: 3 }}>
           <Button color="error" onClick={() => counterStore.increment()}>

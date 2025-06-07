@@ -39,7 +39,7 @@ export default function ProfilePhotos() {
             {editMode ? (
                 <PhotoUploadWidget uploadPhoto={handleUpload} loading={uploadPhoto.isPending}/>
             ) : (
-                <ImageList sx={{height: 350}} cols={6} rowHeight={164}>
+                <ImageList sx={{height: 450}} cols={6} rowHeight={164}>
                     {photos.map((photo) => (
                         <ImageListItem key={photo.id}>
                             <img

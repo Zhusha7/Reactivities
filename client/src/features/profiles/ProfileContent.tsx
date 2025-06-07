@@ -2,6 +2,7 @@ import {SyntheticEvent, useState} from "react"
 import {Box, Paper, Tab, Tabs} from "@mui/material";
 import ProfilePhotos from "./ProfilePhotos.tsx";
 import ProfileAbout from "./ProfileAbout.tsx";
+import ProfileFollow from "./ProfileFollow.tsx";
 
 export default function ProfileContent() {
     const [value, setValue] = useState(0);
@@ -14,17 +15,17 @@ export default function ProfileContent() {
         {label: "About", content: <ProfileAbout />},
         {label: "Photos", content: <ProfilePhotos />},
         {label: "Events", content: <div>Events</div>},
-        {label: "Followers", content: <div>Followers</div>},
-        {label: "Following", content: <div>Following</div>},
+        {label: "Followers", content: <ProfileFollow activeTab={value} />},
+        {label: "Following", content: <ProfileFollow activeTab={value} />},
     ]
 
     return (
         <Box
             component={Paper}
-            mt={2}
+            my={2}
             p={3}
             elevation={3}
-            height={500}
+            height={600}
             sx={{display: "flex", alignItems: "flex-start", borderRadius: 3}}
         >
             <Tabs
@@ -33,7 +34,7 @@ export default function ProfileContent() {
                 onChange={handleChange}
                 sx={{
                     borderRight: 1,
-                    height: 450,
+                    height: "100%",
                     minWidth: 200,
                     borderRightColor: "divider",
                     borderRightWidth: 2,

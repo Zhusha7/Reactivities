@@ -7,16 +7,14 @@ type Props = {
 };
 
 export default function ProfileCard({profile}: Props) {
-    const following = false;
     return (
         <Link to={`/profiles/${profile.id}`} style={{textDecoration: "none"}}>
             <Card
                 elevation={4}
                 sx={{
                     borderRadius: 3,
-                    p: 3,
                     textDecoration: "none",
-                    maxWidth: 300,
+                    maxWidth: 250,
                 }}
             >
                 <CardMedia
@@ -25,40 +23,42 @@ export default function ProfileCard({profile}: Props) {
                     sx={{width: "100%", zIndex: 50}}
                     alt={profile.displayName + " image"}
                 />
-                <CardContent>
-                    <Box display="flex" flexDirection="column" gap={1}>
-                        <Typography variant="h5">{profile.displayName}</Typography>
-                        {profile.bio && (
-                            <Typography variant="body2" color="text.secondary"
-                                        sx={{
-                                            textOverflow: 'ellipsis',
-                                            overflow: 'hidden',
-                                            whiteSpace: "nowrap"
-                                        }}>
-                                {profile.bio}
-                            </Typography>
-                        )}
-                        {following && (
-                            <Chip
-                                size="small"
-                                label="Following"
-                                color="secondary"
-                                variant="outlined"
-                            />
-                        )}
+                <Box p={2} pt={0}>
+                    <CardContent>
+                        <Box display="flex" flexDirection="column" gap={1}>
+                            <Typography variant="h5">{profile.displayName}</Typography>
+                            {profile.bio && (
+                                <Typography variant="body2" color="text.secondary"
+                                            sx={{
+                                                textOverflow: 'ellipsis',
+                                                overflow: 'hidden',
+                                                whiteSpace: "nowrap"
+                                            }}>
+                                    {profile.bio}
+                                </Typography>
+                            )}
+                            {profile.isFollowing && (
+                                <Chip
+                                    size="small"
+                                    label="Following"
+                                    color="secondary"
+                                    variant="outlined"
+                                />
+                            )}
+                        </Box>
+                    </CardContent>
+                    <Divider/>
+                    <Box
+                        sx={{
+                            pt: 2,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "start",
+                        }}
+                    >
+                        <Person/>
+                        <Typography ml={1}>{profile.followerCount} Followers</Typography>
                     </Box>
-                </CardContent>
-                <Divider/>
-                <Box
-                    sx={{
-                        pt: 2,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "start",
-                    }}
-                >
-                    <Person/>
-                    <Typography ml={1}>20 Followers</Typography>
                 </Box>
             </Card>
         </Link>

@@ -2,9 +2,9 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import agent from "../api/agent.ts";
 import {useMemo} from "react";
 import {EditProfileSchema} from "../schemas/editProfileSchema.ts";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
-export const useProfile = (id?: string) => {
+export const useProfile = (id?: string, predicate?: string) => {
     const queryClient = useQueryClient();
     const {data: profile, isLoading: loadingProfile} = useQuery<Profile>({
         queryKey: ['profile', id],
@@ -12,7 +12,8 @@ export const useProfile = (id?: string) => {
             const response = await agent.get<Profile>(`/profiles/${id}`);
             return response.data;
         },
-        enabled: !!id
+        // initialData: ,
+        enabled: !!id && !predicate,
     })
 
     const {data: photos, isLoading: loadingPhotos} = useQuery<Photo[]>({
@@ -21,7 +22,16 @@ export const useProfile = (id?: string) => {
             const response = await agent.get<Photo[]>(`/profiles/${id}/photos`);
             return response.data;
         },
-        enabled: !!id
+        enabled: !!id && !predicate
+    })
+
+    const {data: follows, isLoading: loadingFollows} = useQuery<Profile[]>({
+        queryKey: ['follows', id, predicate],
+        queryFn: async () => {
+            const response = await agent.get<Profile[]>(`/profiles/${id}/follow-list?predicate=${predicate}`);
+            return response.data;
+        },
+        enabled: !!id && !!predicate
     })
 
     const uploadPhoto = useMutation({
@@ -150,6 +160,52 @@ export const useProfile = (id?: string) => {
         }
     })
 
+    const updateFollow = useMutation({
+        mutationFn: async () => {
+            await agent.post(`/profiles/${id}/follow`);
+        },
+        onMutate: async () => {
+            await queryClient.cancelQueries({queryKey: ['profile', id]});
+            await queryClient.cancelQueries({queryKey: ['follows', id, 'followers']});
+            const prevProfile = queryClient.getQueryData<Profile>(['profile', id]);
+            const prevFollows = queryClient.getQueryData<Profile[]>(['follows', id, 'followers']);
+            queryClient.setQueryData(['profile', id], (oldProfile: Profile) => {
+                if (!oldProfile || oldProfile.followerCount === undefined) return oldProfile;
+                return {
+                    ...oldProfile,
+                    isFollowing: !oldProfile.isFollowing,
+                    followerCount: oldProfile.isFollowing
+                        ? oldProfile.followerCount - 1
+                        : oldProfile.followerCount + 1
+                }
+            });
+            queryClient.setQueryData(['follows', id, 'followers'], (oldFollows: Profile[]) => {
+                const user = queryClient.getQueryData<User>(['user'])
+                if (!oldFollows || !user) return oldFollows;
+                return prevProfile?.isFollowing 
+                    ? oldFollows.filter(follow => follow.id !== user.id)
+                    : [
+                        ...oldFollows,
+                        {
+                            ...user,
+                        }
+                    ]
+            });
+            return {prevProfile, prevFollows};
+        },
+        onError: (error, _id, context) => {
+            console.log(error);
+            toast.error('Failed to update follows');
+            if (context?.prevProfile) {
+                queryClient.setQueryData(['profile', id], context.prevProfile);
+                queryClient.setQueryData(['follows', id, 'followers'], context.prevFollows);
+            }
+        },
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({queryKey: ['follows', id, 'followers']});
+        }
+    })
+
     const isCurrentUser = useMemo(() => {
         return id === queryClient.getQueryData<User>(['user'])?.id
     }, [id, queryClient])
@@ -163,6 +219,9 @@ export const useProfile = (id?: string) => {
         uploadPhoto,
         setMainPhoto,
         deletePhoto,
-        editProfile
+        editProfile,
+        updateFollow,
+        follows,
+        loadingFollows,
     }
 }

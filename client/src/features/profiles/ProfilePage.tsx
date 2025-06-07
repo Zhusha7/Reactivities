@@ -1,5 +1,5 @@
 import {Grid} from "@mui/material";
-import {useParams} from "react-router";
+import {Navigate, useParams} from "react-router";
 import {useProfile} from "../../lib/hooks/useProfile";
 import ProfileHeader from "./ProfileHeader";
 import ProfileContent from "./ProfileContent";
@@ -10,12 +10,12 @@ export default function ProfilePage() {
 
     if (loadingProfile) return <div>Loading...</div>;
 
-    if (!profile) return <div>Profile not found</div>;
+    if (!profile) return <Navigate to="not-found"/>;
 
     return (
         <Grid container>
             <Grid size={12}>
-                <ProfileHeader profile={profile} />
+                <ProfileHeader />
                 <ProfileContent />
             </Grid>
         </Grid>
