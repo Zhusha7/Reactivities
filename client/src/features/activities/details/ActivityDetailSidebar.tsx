@@ -50,7 +50,7 @@ export default function ActivityDetailsSidebar( {activity}: Props) {
                               <ListItemText>
                                   <Typography variant="h6">{attendee.displayName}</Typography>
                                   {attendee.isFollowing && (
-                                      <Typography variant="body2" color="orange">
+                                      <Typography variant="body2" color="secondary">
                                           Following
                                       </Typography>
                                   )}

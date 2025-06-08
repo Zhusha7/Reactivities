@@ -12,8 +12,8 @@ import { Calendar } from "react-calendar";
 
 export default function ActivityFilter() {
   return (
-    <Box sx={{ display: "flex", gap: 2, flexDirection: "column",borderRadius: 3 }}>
-      <Paper sx={{p: 3, borderRadius: 3}}>
+    <Box sx={{ display: "flex", gap: 2, flexDirection: "column", borderRadius: 3 }}>
+      <Paper sx={{p: 2, borderRadius: 3}}>
         <Box p={2}>
           <Typography
             variant="h6"

@@ -1,20 +1,41 @@
-import { Box, Typography } from "@mui/material";
-import { useActivities } from "../../../lib/hooks/useActivities";
+import {Box, Typography} from "@mui/material";
+import {useActivities} from "../../../lib/hooks/useActivities";
 import ActivityCard from "./ActivityCard";
+import {useInView} from "react-intersection-observer";
+import {useEffect} from "react";
 
 export default function ActivityList() {
-  const { data: activities, isLoading } = useActivities();
+    const {activitiesGroup, isLoading, hasNextPage, fetchNextPage} = useActivities();
+    const {ref, inView} = useInView({
+        threshold: 0.5
+    })
 
-  if (isLoading) return <Typography variant="h2">Loading...</Typography>;
+    useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage])
 
-  if (!activities)
-    return <Typography>No activities found or user logged out</Typography>;
+    if (isLoading) return <Typography variant="h2">Loading...</Typography>;
 
-  return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-      {activities?.map((activity) => (
-        <ActivityCard key={activity.id} activity={activity} />
-      ))}
-    </Box>
-  );
+    if (!activitiesGroup)
+        return <Typography>No activities found or user logged out</Typography>;
+
+    return (
+        <Box sx={{display: "flex", flexDirection: "column", gap: 3}}>
+            {activitiesGroup.pages.map((activities, index) => (
+                <Box
+                    key={index}
+                    ref={index === activitiesGroup.pages.length - 1 ? ref : null}
+                    display="flex"
+                    flexDirection="column"
+                    gap={3}
+                >
+                    {activities.items.map((activity) => (
+                        <ActivityCard key={activity.id} activity={activity}/>
+                    ))}
+                </Box>
+            ))}
+        </Box>
+    );
 }

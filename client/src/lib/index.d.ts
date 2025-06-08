@@ -1,3 +1,7 @@
+type PageList<T, TCursor> = {
+    items: T[];
+    nextCursor: TCursor;
+}
 type Activity = {
     id: string;
     title: string;

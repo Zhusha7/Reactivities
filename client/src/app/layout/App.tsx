@@ -68,7 +68,7 @@ function App() {
       ) : (
         <>
           <NavBar />
-          <Container maxWidth="lg" sx={{ mt: 10 }}>
+          <Container maxWidth="lg" sx={{ pt: 10 }}>
             <Outlet />
           </Container>
         </>
