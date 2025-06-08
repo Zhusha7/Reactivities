@@ -14,7 +14,7 @@ export default function ProfileContent() {
     const tabContent = [
         {label: "About", content: <ProfileAbout />},
         {label: "Photos", content: <ProfilePhotos />},
-        {label: "Events", content: <div>Events</div>},
+        {label: "Events", content: <div>Events</div>}, // TODO: Add events tab
         {label: "Followers", content: <ProfileFollow activeTab={value} />},
         {label: "Following", content: <ProfileFollow activeTab={value} />},
     ]
