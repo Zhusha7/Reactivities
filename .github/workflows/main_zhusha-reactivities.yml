@@ -23,11 +23,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies and build react app
+      - name: Install deps and build react app
         run:
-          cd client
-          npm install
-          npm run build
+          cd client;
+          npm install;
+          npm run build;
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
