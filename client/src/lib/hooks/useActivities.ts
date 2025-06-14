@@ -29,7 +29,6 @@ export const useActivities = (id?: string) => {
             });
             return response.data;
         },
-        staleTime: 1000 * 60 * 5,
         placeholderData: keepPreviousData,
         initialPageParam: null,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -126,8 +125,8 @@ export const useActivities = (id?: string) => {
                             : oldActivity.attendees.filter(attendee => attendee.id !== currentUser.id)
                         : [...oldActivity.attendees, {
                             id: currentUser.id,
-                            name: currentUser.displayName,
-                            image: currentUser.imageUrl
+                            displayName: currentUser.displayName,
+                            imageUrl: currentUser.imageUrl
                         }]
                 }
             })
